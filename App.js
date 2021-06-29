@@ -1,16 +1,20 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import {
+  SafeAreaView,
   FlatList,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  ImageBackground,
+  Image
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import TodoPage from "./screens/todoPage";
 
+// import TodoPage from "./screens/todoPage";
+const image = { uri: "https://preview.redd.it/hnci2nqjgj151.png?width=1125&format=png&auto=webp&s=9278a54d731a8695970d7512457786c3a275a064" };
 export default function App() {
   const [inputVal, setInputVal] = useState("");
   const [todoList, setTodoList] = useState([]);
@@ -28,11 +32,11 @@ export default function App() {
       case "Active":
         todoFilter = todoList.filter((item) => !item.done);
         let str = "red";
-        console.log(todoFilter);
+        // console.log(todoFilter);
         break;
       case "Done":
         todoFilter = todoList.filter((item) => item.done);
-        console.log(todoFilter);
+        // console.log(todoFilter);
         break;
       default:
         break;
@@ -40,71 +44,97 @@ export default function App() {
   };
 
   let todoFilter = todoList;
+ 
+  
+
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>BABY SHARK TODO</Text>
-      <StatusBar style="auto" />
-      <View style={{ display: "flex", flexDirection: "row" }}>
-        <TextInput
-          style={styles.input}
-          value={inputVal}
-          onChangeText={setInputVal}
-        />
-        <AntDesign
+    <SafeAreaView   behavior="height"  style={styles.container}>
+      <StatusBar
+        animated={true}
+        backgroundColor="#FFFFFF00"
+        hidden={false} />
+      <ImageBackground source={image} style={styles.image}>
+        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-around',paddingTop:50}}>
+          
+          {/* <Image style={styles.img} source={require("./assets/43029.svg")} /> */}
+          <Text style={styles.title}>Todo dddList</Text>
+        </View>
+        <StatusBar style="auto" />
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <TextInput
+            style={styles.input}
+            value={inputVal}
+            onChangeText={setInputVal}
+            placeholder="Add your task here"
+            placeholderStyle={{ fontFamily: "AnotherFont", color: 'red' }}
+          />
+        </View>
+        {/* <View style={styles.row}>
+          <TouchableOpacity
+            style={styles.Threebutton}
+            onPress={() => handleStat("all")}
+          >
+            <Text>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.Threebutton}
+            onPress={() => handleStat("Active")}
+          >
+            <Text>Active</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.Threebutton}
+            onPress={() => handleStat("Done")}
+          >
+            <Text>Done</Text>
+          </TouchableOpacity>
+        </View> */}
+        <View
+          style={{ height: 200 }}
+        >
+          <FlatList
+            data={todoFilter}
+            style={{ flex:1}}
+            keyExtractor={(todo, index) => todo.task}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity onPress={() => handleDone(item)} >
+                <View style={styles.taskCard}>
+                  <Text
+                    style={
+                      
+                      item.done
+                        ? { color: "#65c9ef", textDecorationLine: "line-through", fontSize:22,fontWeight:'300'}
+                        : { color: "#ffffff", fontSize:22,fontWeight:'300' }
+                    }
+                  >
+                    
+                    {item.task}
+                  </Text>
+                  {item.done ? (
+                      <AntDesign name="checkcircle" size={25} color="#65c9ef" />
+                    ) : (
+                      <AntDesign name="checkcircleo" size={25} color="#FFFFFF" />
+                    )}
+              
+                </View>
+               
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+        <View style={styles.footer}>
+         
+          <AntDesign
           onPress={handlepush}
-          name="pluscircleo"
-          size={40}
-          color="#4a707a"
-        />
-      </View>
-      <View style={styles.row}>
-        <TouchableOpacity
-          style={styles.Threebutton}
-          onPress={() => handleStat("all")}
-        >
-          <Text>All</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.Threebutton}
-          onPress={() => handleStat("Active")}
-        >
-          <Text>Active</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.Threebutton}
-          onPress={() => handleStat("Done")}
-        >
-          <Text>Done</Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{ height: 80, display: "flex", justifyContent: "space-around" }}
-      >
-        <FlatList
-          data={todoFilter}
-          keyExtractor={(todo, index) => todo.task}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity onPress={() => handleDone(item)}>
-              <Text
-                style={
-                  item.done
-                    ? { color: "red", textDecorationLine: "line-through" }
-                    : { color: "black" }
-                }
-              >
-                {item.done ? (
-                  <AntDesign name="checkcircle" size={24} color="red" />
-                ) : (
-                  <AntDesign name="checkcircleo" size={24} color="black" />
-                )}
-                {item.task}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    </View>
+           name="pluscircle" 
+           color="#4a5059" 
+           size={80}
+          />
+        </View>  
+      </ImageBackground>
+               
+    </SafeAreaView>
     //  <TodoPage />
   );
 }
@@ -113,28 +143,84 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'column',
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+     justifyContent: "space-around"
+  },
+  tinyLogo: {
+    width: 70,
+    height: 70,
+    padding:20,
+    
+  },
+  img: {
+    width: 120,
+    height: 120,
+    resizeMode: "cover",
+    borderWidth: 2,
+    borderColor: "#65c9ef",
+    borderRadius: 70,
+    position: "relative",
+    top: 30,
+    zIndex: 1,
+    
   },
   row: {
     display: "flex",
     flexDirection: "row",
     margin: 6,
-    justifyContent: "space-between",
-    width: "30%",
+    justifyContent: "space-around",
   },
   title: {
-    color: "#4a707a",
+    color: '#FFFFFF',
     fontSize: 30,
     fontWeight: "bold",
+    fontFamily:'',
   },
+  taskCard:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between',
+    margin: 9,
+    height: 50,
+    backgroundColor:'#4a5059',
+    borderRadius:32,
+    padding:10,
+    shadowColor: "#3D3D3D",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+
+  },
+  footer: {
+    height: 100,
+    alignItems:'center',
+},
   input: {
-    flexGrow: 3,
+    flexGrow: 1,
     borderWidth: 2,
-    borderColor: "#0BD4C0",
-    borderRadius: 6,
-    marginRight: 9,
-    height: 40,
+    borderColor: "#E2E3E4",
+    borderRadius: 32,
+    margin: 9,
+    height: 60,
+    backgroundColor:'#ffff',
+    padding:20,
+    shadowColor: "#000",
+shadowOffset: {
+	width: 0,
+	height: 3,
+},
+shadowOpacity: 0.29,
+shadowRadius: 4.65,
+elevation: 7,
+
   },
   button: {
     borderWidth: 1,
@@ -154,14 +240,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#0BD4C0",
     borderRadius: 20,
   },
-  // Threebutton: {
-  //   // alignItems: "center",
-  //   display: "flex",
-  //   backgroundColor: "#DDDDDD",
-  //   padding: 10,
-  //   justifyContent: "space-between",
-  //   backgroundColor: "#blue",
-  //   borderRadius: 20,
-  // },
   tasks: {},
 });
